@@ -101,6 +101,216 @@ enum BC_OP {
 	BC_OP_INVALID
 };
 
+static constexpr const char* BC_OP_NAMES[] = {
+	"BC_OP_ISLT",
+	"BC_OP_ISGE",
+	"BC_OP_ISLE",
+	"BC_OP_ISGT",
+	"BC_OP_ISEQV",
+	"BC_OP_ISNEV",
+	"BC_OP_ISEQS",
+	"BC_OP_ISNES",
+	"BC_OP_ISEQN",
+	"BC_OP_ISNEN",
+	"BC_OP_ISEQP",
+	"BC_OP_ISNEP",
+	"BC_OP_ISTC",
+	"BC_OP_ISFC",
+	"BC_OP_IST",
+	"BC_OP_ISF",
+	"BC_OP_ISTYPE",
+	"BC_OP_ISNUM",
+	"BC_OP_MOV",
+	"BC_OP_NOT",
+	"BC_OP_UNM",
+	"BC_OP_LEN",
+	"BC_OP_ADDVN",
+	"BC_OP_SUBVN",
+	"BC_OP_MULVN",
+	"BC_OP_DIVVN",
+	"BC_OP_MODVN",
+	"BC_OP_ADDNV",
+	"BC_OP_SUBNV",
+	"BC_OP_MULNV",
+	"BC_OP_DIVNV",
+	"BC_OP_MODNV",
+	"BC_OP_ADDVV",
+	"BC_OP_SUBVV",
+	"BC_OP_MULVV",
+	"BC_OP_DIVVV",
+	"BC_OP_MODVV",
+	"BC_OP_POW",
+	"BC_OP_CAT",
+	"BC_OP_KSTR",
+	"BC_OP_KCDATA",
+	"BC_OP_KSHORT",
+	"BC_OP_KNUM",
+	"BC_OP_KPRI",
+	"BC_OP_KNIL",
+	"BC_OP_UGET",
+	"BC_OP_USETV",
+	"BC_OP_USETS",
+	"BC_OP_USETN",
+	"BC_OP_USETP",
+	"BC_OP_UCLO",
+	"BC_OP_FNEW",
+	"BC_OP_TNEW",
+	"BC_OP_TDUP",
+	"BC_OP_GGET",
+	"BC_OP_GSET",
+	"BC_OP_TGETV",
+	"BC_OP_TGETS",
+	"BC_OP_TGETB",
+	"BC_OP_TGETR",
+	"BC_OP_TSETV",
+	"BC_OP_TSETS",
+	"BC_OP_TSETB",
+	"BC_OP_TSETM",
+	"BC_OP_TSETR",
+	"BC_OP_CALLM",
+	"BC_OP_CALL",
+	"BC_OP_CALLMT",
+	"BC_OP_CALLT",
+	"BC_OP_ITERC",
+	"BC_OP_ITERN",
+	"BC_OP_VARG",
+	"BC_OP_ISNEXT",
+	"BC_OP_RETM",
+	"BC_OP_RET",
+	"BC_OP_RET0",
+	"BC_OP_RET1",
+	"BC_OP_FORI",
+	"BC_OP_JFORI",
+	"BC_OP_FORL",
+	"BC_OP_IFORL",
+	"BC_OP_JFORL",
+	"BC_OP_ITERL",
+	"BC_OP_IITERL",
+	"BC_OP_JITERL",
+	"BC_OP_LOOP",
+	"BC_OP_ILOOP",
+	"BC_OP_JLOOP",
+	"BC_OP_JMP",
+	"BC_OP_FUNCF",
+	"BC_OP_IFUNCF",
+	"BC_OP_JFUNCF",
+	"BC_OP_FUNCV",
+	"BC_OP_IFUNCV",
+	"BC_OP_JFUNCV",
+	"BC_OP_FUNCC",
+	"BC_OP_FUNCCW"
+};
+
+static const char* get_op_name(const BC_OP& instruction) {
+	if (instruction < BC_OP_INVALID) return BC_OP_NAMES[instruction];
+	return "BC_OP_INVALID";
+}
+
+static const char* get_op_description(const BC_OP& instruction) {
+	switch (instruction) {
+	case BC_OP_ISLT: return "if A<VAR> < D<VAR> then JMP";
+	case BC_OP_ISGE: return "if not (A<VAR> < D<VAR>) then JMP";
+	case BC_OP_ISLE: return "if A<VAR> <= D<VAR> then JMP";
+	case BC_OP_ISGT: return "if not (A<VAR> <= D<VAR>) then JMP";
+	case BC_OP_ISEQV: return "if A<VAR> == D<VAR> then JMP";
+	case BC_OP_ISNEV: return "if A<VAR> ~= D<VAR> then JMP";
+	case BC_OP_ISEQS: return "if A<VAR> == D<STR> then JMP";
+	case BC_OP_ISNES: return "if A<VAR> ~= D<STR> then JMP";
+	case BC_OP_ISEQN: return "if A<VAR> == D<NUM> then JMP";
+	case BC_OP_ISNEN: return "if A<VAR> ~= D<NUM> then JMP";
+	case BC_OP_ISEQP: return "if A<VAR> == D<PRI> then JMP";
+	case BC_OP_ISNEP: return "if A<VAR> ~= D<PRI> then JMP";
+	case BC_OP_ISTC: return "if D<VAR> then A<DST> = D and JMP";
+	case BC_OP_ISFC: return "if not D<VAR> then A<DST> = D and JMP";
+	case BC_OP_IST: return "if D<VAR> then JMP";
+	case BC_OP_ISF: return "if not D<VAR> then JMP";
+	case BC_OP_ISTYPE: return "unsupported";
+	case BC_OP_ISNUM: return "unsupported";
+	case BC_OP_MOV: return "A<DST> = D<VAR>";
+	case BC_OP_NOT: return "A<DST> = not D<VAR>";
+	case BC_OP_UNM: return "A<DST> = -D<VAR>";
+	case BC_OP_LEN: return "A<DST> = #D<VAR>";
+	case BC_OP_ADDVN: return "A<DST> = B<VAR> + C<NUM>";
+	case BC_OP_SUBVN: return "A<DST> = B<VAR> - C<NUM>";
+	case BC_OP_MULVN: return "A<DST> = B<VAR> * C<NUM>";
+	case BC_OP_DIVVN: return "A<DST> = B<VAR> / C<NUM>";
+	case BC_OP_MODVN: return "A<DST> = B<VAR> % C<NUM>";
+	case BC_OP_ADDNV: return "A<DST> = C<NUM> + B<VAR>";
+	case BC_OP_SUBNV: return "A<DST> = C<NUM> - B<VAR>";
+	case BC_OP_MULNV: return "A<DST> = C<NUM> * B<VAR>";
+	case BC_OP_DIVNV: return "A<DST> = C<NUM> / B<VAR>";
+	case BC_OP_MODNV: return "A<DST> = C<NUM> % B<VAR>";
+	case BC_OP_ADDVV: return "A<DST> = B<VAR> + C<VAR>";
+	case BC_OP_SUBVV: return "A<DST> = B<VAR> - C<VAR>";
+	case BC_OP_MULVV: return "A<DST> = B<VAR> * C<VAR>";
+	case BC_OP_DIVVV: return "A<DST> = B<VAR> / C<VAR>";
+	case BC_OP_MODVV: return "A<DST> = B<VAR> % C<VAR>";
+	case BC_OP_POW: return "A<DST> = B<VAR> ^ C<VAR>";
+	case BC_OP_CAT: return "A<DST> = concat B..C";
+	case BC_OP_KSTR: return "A<DST> = D<STR>";
+	case BC_OP_KCDATA: return "A<DST> = D<CDATA>";
+	case BC_OP_KSHORT: return "A<DST> = D<LITS>";
+	case BC_OP_KNUM: return "A<DST> = D<NUM>";
+	case BC_OP_KPRI: return "A<DST> = D<PRI>";
+	case BC_OP_KNIL: return "A<BASE>..D<BASE> = nil";
+	case BC_OP_UGET: return "A<DST> = D<UV>";
+	case BC_OP_USETV: return "A<UV> = D<VAR>";
+	case BC_OP_USETS: return "A<UV> = D<STR>";
+	case BC_OP_USETN: return "A<UV> = D<NUM>";
+	case BC_OP_USETP: return "A<UV> = D<PRI>";
+	case BC_OP_UCLO: return "close upvalues then goto D<JUMP>";
+	case BC_OP_FNEW: return "A<DST> = D<FUNC>";
+	case BC_OP_TNEW: return "A<DST> = {}";
+	case BC_OP_TDUP: return "A<DST> = D<TAB>";
+	case BC_OP_GGET: return "A<DST> = _G.D<STR>";
+	case BC_OP_GSET: return "_G.D<STR> = A<VAR>";
+	case BC_OP_TGETV: return "A<DST> = B<VAR>[C<VAR>]";
+	case BC_OP_TGETS: return "A<DST> = B<VAR>[C<STR>]";
+	case BC_OP_TGETB: return "A<DST> = B<VAR>[C<LIT>]";
+	case BC_OP_TGETR: return "unsupported";
+	case BC_OP_TSETV: return "B<VAR>[C<VAR>] = A<VAR>";
+	case BC_OP_TSETS: return "B<VAR>[C<STR>] = A<VAR>";
+	case BC_OP_TSETB: return "B<VAR>[C<LIT>] = A<VAR>";
+	case BC_OP_TSETM: return "table mass-assign from multres";
+	case BC_OP_TSETR: return "unsupported";
+	case BC_OP_CALLM: return "call with multres args";
+	case BC_OP_CALL: return "call";
+	case BC_OP_CALLMT: return "tailcall with multres args";
+	case BC_OP_CALLT: return "tailcall";
+	case BC_OP_ITERC: return "generic iterator call";
+	case BC_OP_ITERN: return "numeric iterator call";
+	case BC_OP_VARG: return "vararg load";
+	case BC_OP_ISNEXT: return "goto ITERN at D<JUMP>";
+	case BC_OP_RETM: return "return multres";
+	case BC_OP_RET: return "return range";
+	case BC_OP_RET0: return "return";
+	case BC_OP_RET1: return "return one value";
+	case BC_OP_FORI: return "numeric for init";
+	case BC_OP_JFORI: return "unsupported";
+	case BC_OP_FORL: return "numeric for loop";
+	case BC_OP_IFORL: return "unsupported";
+	case BC_OP_JFORL: return "unsupported";
+	case BC_OP_ITERL: return "generic for loop";
+	case BC_OP_IITERL: return "unsupported";
+	case BC_OP_JITERL: return "unsupported";
+	case BC_OP_LOOP: return "loop dispatch";
+	case BC_OP_ILOOP: return "unsupported";
+	case BC_OP_JLOOP: return "unsupported";
+	case BC_OP_JMP: return "jump";
+	case BC_OP_FUNCF: return "unsupported";
+	case BC_OP_IFUNCF: return "unsupported";
+	case BC_OP_JFUNCF: return "unsupported";
+	case BC_OP_FUNCV: return "unsupported";
+	case BC_OP_IFUNCV: return "unsupported";
+	case BC_OP_JFUNCV: return "unsupported";
+	case BC_OP_FUNCC: return "unsupported";
+	case BC_OP_FUNCCW: return "unsupported";
+	case BC_OP_INVALID: return "invalid opcode";
+	}
+
+	return "unknown opcode";
+}
+
 struct Bytecode::Instruction {
 	BC_OP type;
 	uint8_t a = 0;

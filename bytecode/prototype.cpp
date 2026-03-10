@@ -54,6 +54,7 @@ void Bytecode::Prototype::read_instructions() {
 		case BC_OP_JFUNCV:
 		case BC_OP_FUNCC:
 		case BC_OP_FUNCCW:
+			if (bytecode.allowUnsupportedInstructions) break;
 			assert(false, "Prototype has unsupported instruction (" + byte_to_string(instructions[i].type) + ")", bytecode.filePath, DEBUG_INFO);
 		}
 

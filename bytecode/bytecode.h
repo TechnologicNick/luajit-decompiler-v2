@@ -12,7 +12,7 @@ public:
 	#include "constants.h"
 	#include "instructions.h"
 
-	Bytecode(const std::string& filePath);
+	Bytecode(const std::string& filePath, const bool& allowUnsupportedInstructions = false);
 	~Bytecode();
 
 	void operator()();
@@ -27,6 +27,7 @@ public:
 
 	const Prototype* main = nullptr;
 	uint64_t prototypesTotalSize = 0;
+	const bool allowUnsupportedInstructions;
 
 private:
 

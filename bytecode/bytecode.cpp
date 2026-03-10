@@ -1,6 +1,6 @@
 #include "..\main.h"
 
-Bytecode::Bytecode(const std::string& filePath) : filePath(filePath) {}
+Bytecode::Bytecode(const std::string& filePath, const bool& allowUnsupportedInstructions) : filePath(filePath), allowUnsupportedInstructions(allowUnsupportedInstructions) {}
 
 Bytecode::~Bytecode() {
 	close_file();
